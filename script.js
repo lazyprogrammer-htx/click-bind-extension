@@ -1,9 +1,11 @@
-const span = document.getElementById("target");
+// const span = document.getElementById("target");
 
 let assignedElement = null; //document.getElementById('h1');
+let serviceUnitStops = null;
+let tooltipDivs = null;
 let assigning = false;
 
-console.log("**Click Bind Extension (CBE) loaded");
+printLog("Loaded up cuz");
 
 // looking for keystrokes
 // Insert = assign new element
@@ -12,12 +14,12 @@ document.addEventListener("keydown", (e) => {
     const key = e.key;
     // console.log("**CBE -> Key pressed: " + key);
     if(key === "Insert"){
-        console.log("**CBE -> Click any element to assign it");
+        printLog("Click any element to assign it");
         assigning = true;
     }else if(key === "\\"){
         click();
     }else{
-        console.log("**CBE -> Other key pressed");
+        printLog("Other key pressed");
     }
 });
 
@@ -29,9 +31,15 @@ document.addEventListener("click", (e) => {
     }
 });
 
+function printLog(str){
+    console.log("***** Extension Log out *****");
+    console.log(str);
+    console.log("**********");
+}
+
 function click(){
     if(!assignedElement){
-        console.log("**CBE -> No element assigned");
+        printLog("No element assigned");
         return;
     }
     assignedElement.dispatchEvent(new MouseEvent('click',{
@@ -39,7 +47,7 @@ function click(){
         cancelable: true,
         view: window
     }));
-    console.log(`**CBE -> ${assignedElement} clicked`);
+    printLog(`Clicked = ${assignedElement}`);
 }
 
 function assign(el){
@@ -50,5 +58,38 @@ function assign(el){
     assignedElement = el;
     assignedElement.classList.add("target");
 
-    console.log("**CBE -> assignment succesful")
+    const elementId = assignedElement.getAttribute("id");
+    printLog(`elementid = ${elementId}`);
+
+    if(elementId.match(/time_\d+/).index >= 0){
+        printLog("calc button detekted");
+        const assignedServiceUnit = elementId.substring(5);
+        printLog("service id = "+assignedServiceUnit);
+        const ul = document.getElementById(`unit_orders_${assignedServiceUnit}`)
+        serviceUnitStops = ul.children;
+        // printLog(serviceUnitStops);
+        tooltipDivs = [];
+        for(let i = 0; i < serviceUnitStops.length; i++){
+            let stop = serviceUnitStops[i];
+
+            const id = stop.getAttribute("id");
+            printLog("route stop id# "+id);
+            
+
+            let psssh = stop.querySelector("fieldset").children[1].querySelector(".order_info_tooltip");
+            tooltipDivs[i] = psssh;
+
+            let helper3 = psssh.innerHTML.split("aria-describedby=\"");
+            let psssh2 = document.getElementById(helper3[1].substring(0,helper3[1].indexOf("\"")));
+            let info = psssh2.querySelector(".ui-tooltip-content");
+            printLog(info);
+
+            stop.appendChild(info);
+        }
+        
+        console.log(ul);
+    }else{
+        printLog("not calc button");
+    }
+    printLog("Assignment succesful");
 }
