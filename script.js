@@ -1,6 +1,4 @@
-// const span = document.getElementById("target");
-
-let assignedElement = null; //document.getElementById('h1');
+let assignedElement = null;
 let serviceUnitStops = null;
 let tooltipDivs = null;
 let assigning = false;
