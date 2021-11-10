@@ -66,40 +66,40 @@ function assign(el){
 
     //grab new element and highlight
     assignedElement = el;
-    assignedElement.classList.add("target");
+    // assignedElement.classList.add("target");
 
     const elementId = assignedElement.getAttribute("id");
     printLog(`elementid = ${elementId}`);
 
-    if(elementId.match(/time_\d+/).index >= 0){
-        printLog("calc button detekted");
-        const assignedServiceUnit = elementId.substring(5);
-        printLog("service id = "+assignedServiceUnit);
-        const ul = document.getElementById(`unit_orders_${assignedServiceUnit}`)
-        serviceUnitStops = ul.children;
-        // printLog(serviceUnitStops);
-        tooltipDivs = [];
-        for(let i = 0; i < serviceUnitStops.length; i++){
-            let stop = serviceUnitStops[i];
+    // if(elementId.match(/time_\d+/).index >= 0){
+    //     printLog("calc button detekted");
+    //     const assignedServiceUnit = elementId.substring(5);
+    //     printLog("service id = "+assignedServiceUnit);
+    //     const ul = document.getElementById(`unit_orders_${assignedServiceUnit}`)
+    //     serviceUnitStops = ul.children;
+    //     // printLog(serviceUnitStops);
+    //     tooltipDivs = [];
+    //     for(let i = 0; i < serviceUnitStops.length; i++){
+    //         let stop = serviceUnitStops[i];
 
-            const id = stop.getAttribute("id");
-            printLog("route stop id# "+id);
+    //         const id = stop.getAttribute("id");
+    //         printLog("route stop id# "+id);
             
 
-            let psssh = stop.querySelector("fieldset").children[1].querySelector(".order_info_tooltip");
-            tooltipDivs[i] = psssh;
+    //         let psssh = stop.querySelector("fieldset").children[1].querySelector(".order_info_tooltip");
+    //         tooltipDivs[i] = psssh;
 
-            let helper3 = psssh.innerHTML.split("aria-describedby=\"");
-            let psssh2 = document.getElementById(helper3[1].substring(0,helper3[1].indexOf("\"")));
-            let info = psssh2.querySelector(".ui-tooltip-content");
-            printLog(info);
+    //         let helper3 = psssh.innerHTML.split("aria-describedby=\"");
+    //         let psssh2 = document.getElementById(helper3[1].substring(0,helper3[1].indexOf("\"")));
+    //         let info = psssh2.querySelector(".ui-tooltip-content");
+    //         printLog(info);
 
-            stop.appendChild(info);
-        }
+    //         stop.appendChild(info);
+    //     }
         
-        console.log(ul);
-    }else{
-        printLog("not calc button");
-    }
+    //     console.log(ul);
+    // }else{
+    //     printLog("not calc button");
+    // }
     printLog("Assignment succesful");
 }
