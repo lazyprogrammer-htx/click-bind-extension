@@ -21,6 +21,18 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+// document.addEventListener("keydown", (e) => {
+//     const key = e.key;
+//     console.log("**testing -> Key pressed: " + key);
+//     if(key === "`"){
+//        const query = document.querySelector("#service_order_address_line1").value + ", " +
+//         document.querySelector("#service_order_city").value + ", " +
+//         document.querySelector("#service_order_state").value + ", " +
+//         document.querySelector("#service_order_zipcode").value;
+//         console.log("search this-> "+query);
+//     }
+// });
+
 document.addEventListener("click", (e) => {
     const clickTarget = e.target;
     if(assigning){
