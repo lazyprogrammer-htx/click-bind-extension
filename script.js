@@ -1,3 +1,6 @@
+//check out https://stackoverflow.com/questions/34219778/cant-find-an-element-by-queryselector to get elements inside the iframe (need to filter which iframe it is though!)
+
+
 let assignedElement = null;
 let serviceUnitStops = null;
 let tooltipDivs = null;
