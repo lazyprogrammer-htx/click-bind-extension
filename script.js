@@ -32,7 +32,7 @@ document.addEventListener("keydown", (e) => {
         // printLog(e);
     }
 });
-/*
+
 document.addEventListener("dblclick", (e) => {
     if (document.activeElement.id === "edit_setup_time"){
         document.activeElement.value = 12;
@@ -45,47 +45,41 @@ document.addEventListener("click", (e) => {
     if(assigning){
         assign(clickTarget);
         assigning = false;
-    }else if (document.activeElement.id === "edit_setup_time"){
-        printLog("detected setuptime input box!");
-        const setupTimeInputBox = document.activeElement;
+    }
 
+    else if (document.activeElement.id === "edit_setup_time"){
+        // printLog("detected setuptime input box!");
+        const setupTimeInputBox = document.activeElement;
         const form = setupTimeInputBox.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         const lockButtonList = form.querySelectorAll(".service_time_lock");
-        const submitButtonList = form.querySelectorAll("#submitButtonSetupTime");
         const lockButton = lockButtonList[0];
-        const submitButton = submitButtonList[0];
-
-        printLog(form);
-        printLog(lockButton);
-        printLog(submitButton);
-
         const temp = parseInt(setupTimeInputBox.value);
         setupTimeInputBox.value = temp + 15;
 
-        setupTimeInputBox.addEventListener("keydown", (e) => {
-            const key = e.key;
-            if(key === "Enter"){
-                
-                lockButton.dispatchEvent(new MouseEvent('click',{
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                }));
-                // submitButton.dispatchEvent(new MouseEvent('click',{
-                //     bubbles: true,
-                //     cancelable: true,
-                //     view: window
-                // }));
-                e.preventDefault();
-            }
-        });
-        setupTimeInputBox.removeEventListener("keydown", (e) => { });
+        printLog("input box  /  value: " +setupTimeInputBox.value);
+
+        setupTimeInputBox.addEventListener("keydown", closeModal(setupTimeInputBox,lockButton, e));
+        setupTimeInputBox.removeEventListener("keydown", closeModal(setupTimeInputBox,lockButton, e));
 
         //lock button to click <a href="#" class="pull-left service_time_lock mt-10 routeUnlocked" style="cursor:pointer;width: 14px;height: 14px;" title="Service Time is Locked. Click to Unlock"></a>
         //submit button <input class="btn btn-primary" id="submitButtonSetupTime" name="commit" type="submit" value="Save">
     }
 });
-*/
+
+function closeModal(setupTimeInputBox, lockButton, e){
+    // printLog("close modal function")
+    const key = e.key;
+    if(key === "Enter"){ 
+        printLog(lockButton);
+        lockButton.click();
+        // lockButton.dispatchEvent(new MouseEvent('click',{
+        //     bubbles: true,
+        //     cancelable: true,
+        //     view: window
+        // }));
+        // e.preventDefault();
+    }
+}
 
 function printLog(str){
     console.log("***** CBE *****");
