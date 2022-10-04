@@ -2,13 +2,54 @@ let assignedElement = null;
 let serviceUnitStops = null;
 let tooltipDivs = null;
 let assigning = false;
-
 let lastKeyPressed = null;
-
 let testDiv = null;
+
+
+// setTimeout(hideRouteLabels(), 10000);
+
+// function hideRouteLabels(){
+//     const routeMenuSettingsButton = document.querySelector("#dropdownMenuButton");
+//     const hideRouteLabelMenuOption = document.querySelector("#option_show_route_label");
+//     if(hideRouteLabelMenuOption.textContent.indexOf("Hide") >= 0){
+//         printLog("Hiding route labels...")
+//         routeMenuSettingsButton.dispatchEvent(new MouseEvent('click',{
+//             bubbles: true,
+//             cancelable: true,
+//             view: window
+//         }));
+//         setTimeout(() => {
+//             hideRouteLabelMenuOption.dispatchEvent(new MouseEvent('click',{
+//                 bubbles: true,
+//                 cancelable: true,
+//                 view: window
+//             }));
+//             setTimeout(() =>{
+//                 routeMenuSettingsButton.dispatchEvent(new MouseEvent('click',{
+//                     bubbles: true,
+//                     cancelable: true,
+//                     view: window
+//                 }));
+//                 printLog("Route labels should be hidden now")
+//             },1000);
+//         },1000);
+
+
+//     }    
+// }
+
+
+setTimeout(buildSetupTimeOptions(), 5000);
 
 printLog("Loaded up cuz");
 
+// function click(el){
+//     el.dispatchEvent(new MouseEvent('click',{
+//         bubbles: true,
+//         cancelable: true,
+//         view: window
+//     }));
+// }
 
 // looking for keystrokes
 // Insert = assign new element
@@ -42,7 +83,75 @@ document.addEventListener("auxclick", (e) => {
     e.preventDefault();
 });
 
+function buildSetupTimeOptions(){
+    const routeStartTimeBox = document.querySelector("#edit_start_time");
+    const routeStartTimeDiv = routeStartTimeBox.parentElement;
+    const startTimes = [" 7:00 AM " , " 7:15 AM " , " 7:30 AM " , " 7:45 AM " , " 8:00 AM " , " 8:15 AM " , " 8:30 AM " , " 8:45 AM " , " 9:00 AM ",  " 9:15 AM " , " 9:30 AM " , " 9:45 AM "  , " 10:00 AM "];
+    const routeStartTimeSubmit = document.querySelector("#submitButtonServiceRoute");
 
+    startTimes.forEach((time, index) =>{
+        let temp = document.createElement("a");
+        temp.text = time;
+        temp.addEventListener("click", (e) => {
+            routeStartTimeBox.value = time;
+            routeStartTimeSubmit.dispatchEvent(new MouseEvent('click',{
+                bubbles: true,
+                cancelable: true,
+                view: window
+            }));
+        });
+        routeStartTimeDiv.appendChild(temp);
+    });
+
+    const setupTimeBox = document.querySelector(".setup-time");
+    const setupTimeSubmit = document.querySelector("#submitButtonSetupTime");
+    const setupTimeLock = document.querySelector(".service_time_lock");
+    const parent = setupTimeBox.parentElement;
+    const times = [0,12,27,42,57,72,87,102,117,132,147,162,177,192,207,222,237,252,267,282,297];
+
+    parent.appendChild(document.createElement("br"));
+
+    let setup = new Array();
+    for(let x=0;x<times.length;x++){
+        setup[x] = document.createElement("a");
+        // if((x-1)%4 == 0){
+        //     setup[x].text = " "+((times[x]-12)/4)+"hr ";
+        // }else{
+            setup[x].text = " "+(times[x])+"";
+        // }
+        setup[x].style.fontSize = "x-small";
+        if((x-1)%4 ==0){
+            parent.appendChild(document.createElement("br"));
+            setup[x].text += "("+((x-1)/4)+"h)";
+            setup[x].style.fontSize = "small";
+        }
+        if(times[x] <= 57){
+            setup[x].style.fontSize = "small";
+        }
+        setup[x].text += "  ";
+        setup[x].addEventListener("click", (e) => {
+            setupTimeBox.value = times[x];
+            if(setupTimeLock.classList.contains("routeUnlocked")){
+                setupTimeLock.dispatchEvent(new MouseEvent('click',{
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                }));
+            }   
+            setupTimeSubmit.dispatchEvent(new MouseEvent('click',{
+                bubbles: true,
+                cancelable: true,
+                view: window
+            }));
+
+            setTimeout(() => {
+                click();    
+            }, 200);
+        });
+        parent.appendChild(setup[x]);
+    }
+    printLog("Setup time menu added");
+}
 
 document.addEventListener("click", (e) => {
     const clickTarget = e.target;
@@ -131,6 +240,7 @@ function click(){
 }
 
 function assign(el){
+
     if(assignedElement)
         assignedElement.classList.remove("target");
 
@@ -176,6 +286,8 @@ function assign(el){
                 if (canceled) {
                     printLog("FAILED hover simulation");
                 }
+                const thisEditTime = all[j].parentElement.parentElement.parentElement.parentElement;
+                let setupTrigger 
             }
         }
         printLog('mouse over sim should be done!');
@@ -244,6 +356,70 @@ function assign(el){
             }
 
         }
+
+
+
+        //eventually we want to make this highlight all builds so its easier to identify what needs extra time
+        setTimeout(() => {
+            let list = document.querySelectorAll(".ui-tooltip-content > .fs-10")
+            list.forEach((l) => {
+                    const temp = l.textContent.split(" - ");
+                    if(temp.length >= 2 && parseInt(temp[0]) >= 0){ //number and product line (hopefully)
+                        const line = l.textContent+"";
+                        let num = parseInt(temp[0]);
+                        if(num == 0){
+                            // if(line.indexOf("DELIVERY INFO") >= 0 || line.indexOf("CALL 1-877") >= 0 || line.indexOf("AFW_SCHOOL") >= 0 || line.indexOf("DONATION-TX") >= 0|| line.indexOf("1-ONLY") >= 0){
+                            //     l.remove();
+                            // }else{
+                                l.style.fontSize = "70%";
+                                l.style.color = "#0c2ba8";
+                            // }
+                            // l.style.or = "#0c2ba8";
+                            console.log("removed/reduced line= "+l.textContent);
+                        }else{
+                            if(num == 1){
+                                //do nothing
+                            }else if(num == 2){
+                                l.style.fontSize = "130%";
+                            }else{
+                                l.style.fontSize = "160%";
+                            }
+                        }
+                    }else{
+                        console.log("skip") //= "+l.textContent)
+                    }
+            })
+        },5000);
+
+
+        // if(temp.indexOf("DELIVERY INFO") >= 0 || temp.indexOf("CALL 1-877") >= 0 || temp.indexOf("SCHOOL REWARDS") >= 0 || temp.indexOf("DONATION-TX") >= 0){
+
+        // }else{
+        //     l.style.fontSize = "70%";
+        //     l.style.color = "#0c2ba8";
+        //     console.log("reduced a line size");               
+        // }
+
+
+        //this is to make the 0 item lines smaller
+        // setTimeout(() => {
+        //     let list = document.querySelectorAll(".ui-tooltip-content > .fs-10")
+        //     list.forEach((l) => {
+        //         if(l.textContent.indexOf("0 - ")==0 ){
+        //             const temp = l.textContent+" ";
+        //             if(temp.indexOf("DELIVERY INFO") >= 0 || temp.indexOf("CALL 1-877") >= 0 || temp.indexOf("SCHOOL REWARDS") >= 0 || temp.indexOf("DONATION-TX") >= 0){
+                        
+        //             }else{
+        //                 l.style.fontSize = "70%";
+        //                 l.style.color = "#0c2ba8";
+        //                 console.log("reduced a line size");               
+        //             }
+        //         }else{
+        //             console.log("skip")
+        //         }
+        //     })
+        // },5000);
+
         
         // console.log(ul);
     }
